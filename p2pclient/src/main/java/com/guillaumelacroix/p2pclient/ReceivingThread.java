@@ -34,7 +34,7 @@ public class ReceivingThread extends Thread
 				String s;
 				while (!socket.isInputShutdown() && (s = bufferedReader.readLine()) != null)
 				{
-					System.out.println("[" + socket.getInetAddress() + ":" + socket.getLocalPort() + "] " + s);					
+					System.out.println(s);					
 				}
 			}
 		} catch (SocketException e) {

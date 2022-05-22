@@ -3,6 +3,8 @@ package com.guillaumelacroix.p2pclient;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Main {
 
@@ -10,10 +12,25 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		System.out.println("Enter the port to listen to: ");
 		String port = br.readLine();
+		System.out.println("Enter a username: ");
+		String username = br.readLine();
+		
+		User user = new User("127.0.0.1", port, username);
 		
 		// Start a receiving thread
 		ReceivingThread receiving_thread = new ReceivingThread(Integer.valueOf(port));
 		receiving_thread.start();
+		
+		// Connect to the server
+		String address = "http://127.0.0.1:8080/connect?" + user.getUserRepresentation();
+		URL url = new URL(address);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("POST");
+		if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
+		{
+			System.out.println("Could not connect to the server");
+			return;
+		}
 		
 		// Now start the client thread
 		ClientThread client = null;
@@ -45,10 +62,10 @@ public class Main {
 					}
 				}
 				
-				client = new ClientThread(br);
+				client = new ClientThread(br, username);
 				if (client.connect())
 				{
-					System.out.println("Now chatting with " + client.getConnectedAddress() + ". Enter !e to quit");
+					System.out.println("Now chatting with " + client.getTargetUsername() + ". Enter !e to quit");
 					client.start();
 				}
 				else

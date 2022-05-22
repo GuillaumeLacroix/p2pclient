@@ -1,2 +1,5 @@
 /target/
 .project
+/ p2pserver/.settings/org.eclipse.core.resources.prefs
+/ p2pserver/.settings/org.eclipse.jdt.core.prefs
+/ p2pserver/.settings/org.eclipse.m2e.core.prefs
